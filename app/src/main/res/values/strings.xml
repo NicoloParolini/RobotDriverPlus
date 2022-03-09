@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RobotDriverPlus</string>
+    <string name="controllerName">🎮 %1$s</string>
+    <string name="robotName">🤖 %1$s</string>
+</resources>
