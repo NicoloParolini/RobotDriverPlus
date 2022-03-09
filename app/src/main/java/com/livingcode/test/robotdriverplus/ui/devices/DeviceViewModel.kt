@@ -2,6 +2,7 @@ package com.livingcode.test.robotdriverplus.ui.devices
 
 import android.content.res.Resources
 import com.livingcode.test.robotdriverplus.R
+import com.livingcode.test.robotdriverplus.models.Controller
 import com.livingcode.test.robotdriverplus.models.Device
 import com.livingcode.test.robotdriverplus.models.Robot
 
@@ -22,6 +23,7 @@ class ControllerViewModel(
 }
 
 class RobotViewModel(
+    val controller : Controller? = null,
     override val device: Device,
     override val onClick: (String) -> Unit,
     override val resources: Resources

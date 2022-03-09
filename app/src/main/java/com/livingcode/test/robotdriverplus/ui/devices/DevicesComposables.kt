@@ -45,7 +45,20 @@ fun Devices(
                             }
                         }
                     }
-                    else -> {}
+                    is RobotViewModel -> {
+                        vm.controller?.let { controller ->
+                            Text(
+                                text = stringResource(
+                                    id = R.string.controllerName,
+                                    controller.name
+                                ),
+                                modifier = Modifier
+                                    .padding(all = defaultPadding)
+                                    .align(Alignment.CenterEnd),
+                                style = listElementName
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -91,7 +104,8 @@ fun ControllersPreview() {
         RobotViewModel(
             device = Robot(name = "NXT-2", connected = false),
             onClick = {},
-            resources = LocalContext.current.resources
+            resources = LocalContext.current.resources,
+            controller = Controller("Gold", false)
         ),
     ), onSelected = {})
 }
