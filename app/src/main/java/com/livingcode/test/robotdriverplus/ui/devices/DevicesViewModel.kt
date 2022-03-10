@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.livingcode.test.robotdriverplus.StateFlowContainer
 import com.livingcode.test.robotdriverplus.models.Controller
 import com.livingcode.test.robotdriverplus.models.Robot
+import com.livingcode.test.robotdriverplus.ui.navigation.FlowResult
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowViewModel
 
 class DevicesViewModel(private val resources : Resources) : FlowViewModel() {
@@ -14,7 +15,7 @@ class DevicesViewModel(private val resources : Resources) : FlowViewModel() {
     }
 
     fun onDeviceSelected(deviceName : String){
-
+        next(FlowResult.RESULT_CONTROLLER_SELECTED, deviceName)
     }
 
     private fun getDevices() {

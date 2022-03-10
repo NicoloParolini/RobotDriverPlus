@@ -24,7 +24,8 @@ abstract class FlowViewModel : ViewModel(), KoinComponent {
         back()
     }
 
-    fun next(result: FlowResult){
+    fun next(result: FlowResult, payload : Any? = null){
+        result.payload = payload
         proceed?.resume(result)
     }
 }

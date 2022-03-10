@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetup
+import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetupRoot
+import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetupViewModel
 import com.livingcode.test.robotdriverplus.ui.devices.DevicesRoot
 import com.livingcode.test.robotdriverplus.ui.devices.DevicesViewModel
 import com.livingcode.test.robotdriverplus.ui.navigation.*
@@ -59,5 +62,6 @@ class MainActivity : ComponentActivity() {
 fun MainRoot(destination: MutableState<Screen>){
     when(destination.value.screen){
         Screens.SCREEN_DEVICE_LIST -> DevicesRoot(destination.value.viewModel as? DevicesViewModel)
+        Screens.SCREEN_CONTROLLER_SETUP -> ControllerSetupRoot(vm = destination.value.viewModel as? ControllerSetupViewModel)
     }
 }
