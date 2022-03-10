@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 val defaultPadding = 8.dp
+val defaultPaddingTriple = 24.dp
 val defaultRoundPercent = 20
 
 val colorConnected = Color.Green

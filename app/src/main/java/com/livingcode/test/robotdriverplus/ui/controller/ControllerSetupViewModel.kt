@@ -4,8 +4,11 @@ import com.livingcode.test.robotdriverplus.StateFlowContainer
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowViewModel
 import timber.log.Timber
 
-class ControllerSetupViewModel() : FlowViewModel() {
+class ControllerSetupViewModel(val name : String) : FlowViewModel() {
     val robots: StateFlowContainer<List<ControlledRobotViewModel>> = StateFlowContainer(listOf())
+    val rightStick = JoystickViewModel("RIGHT STICK", {})
+    val leftStick = JoystickViewModel("LEFT STICK", {})
+    val selected = StateFlowContainer(ControllerViewModel.ControllerButtons.NONE)
 
     init {
         getRobots()

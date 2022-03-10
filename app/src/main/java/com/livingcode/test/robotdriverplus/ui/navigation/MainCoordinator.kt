@@ -7,11 +7,13 @@ import org.koin.core.component.get
 
 class MainCoordinator(navigator: Navigator) : FlowCoordinator(), KoinComponent {
 
-    private val controllerSetupStep = FlowStep().useDefaultAction(
-        viewModelConstructor = {ControllerSetupViewModel()},
-        navigator = navigator,
-        screen = Screens.SCREEN_CONTROLLER_SETUP
-    )
+    private val controllerSetupStep = FlowStep().setAction { result ->
+        (result.payload as? String)?.let { name ->
+            val vm = ControllerSetupViewModel(name)
+            navigator.navigate(Screen(Screens.SCREEN_CONTROLLER_SETUP, vm))
+            return@setAction vm.proceed()
+        } ?: FlowResult.RESULT_MISSING_PAYLOAD
+    }
 
     private val deviceListStep = FlowStep().useDefaultAction(
         viewModelConstructor = { DevicesViewModel(get()) },
