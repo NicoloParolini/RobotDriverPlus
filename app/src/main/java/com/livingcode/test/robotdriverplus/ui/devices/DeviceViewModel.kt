@@ -8,7 +8,6 @@ import com.livingcode.test.robotdriverplus.models.Robot
 
 sealed interface DeviceViewModel {
     val device: Device
-    val onClick: (String) -> Unit
     val resources: Resources
     val displayName: String
 }
@@ -16,7 +15,6 @@ sealed interface DeviceViewModel {
 class ControllerViewModel(
     val robots: List<Robot>,
     override val device: Device,
-    override val onClick: (String) -> Unit,
     override val resources: Resources
 ) : DeviceViewModel {
     override val displayName = resources.getString(R.string.controllerName, device.name)
@@ -25,7 +23,7 @@ class ControllerViewModel(
 class RobotViewModel(
     val controller : Controller? = null,
     override val device: Device,
-    override val onClick: (String) -> Unit,
+    val onClick: (String) -> Unit,
     override val resources: Resources
 ) : DeviceViewModel {
     override val displayName = resources.getString(R.string.robotName, device.name)

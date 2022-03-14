@@ -82,19 +82,16 @@ fun ControllersPreview() {
     Devices(devices = listOf(
         ControllerViewModel(
             device = Controller(name = "Blue", connected = true),
-            onClick = {},
             resources = LocalContext.current.resources,
             robots = listOf(Robot("NXT-3", true))
         ),
         ControllerViewModel(
             device = Controller(name = "Red", connected = false),
-            onClick = {},
             resources = LocalContext.current.resources,
             robots = listOf()
         ),
         ControllerViewModel(
             device = Controller(name = "Gold", connected = true),
-            onClick = {},
             resources = LocalContext.current.resources,
             robots = listOf(
                 Robot("NXT-1", false),
@@ -103,7 +100,6 @@ fun ControllersPreview() {
         ),
         ControllerViewModel(
             device = Controller(name = "Silver", connected = true),
-            onClick = {},
             resources = LocalContext.current.resources,
             robots = listOf()
         ),

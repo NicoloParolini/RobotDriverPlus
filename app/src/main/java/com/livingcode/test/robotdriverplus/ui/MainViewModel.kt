@@ -12,8 +12,8 @@ class MainViewModel : ViewModel(), KoinComponent {
     private val robotDriver: RobotDriver by inject()
     private val controllerHandler = ControllerHandler()
 
-    fun onKeyEvent(event: KeyEvent) {
-        robotDriver.processCommand(controllerHandler.getButtonCommand(event), event.deviceId, RobotDriver.CommandType.BUTTON)
+    fun onKeyEvent(event: KeyEvent, press : Boolean) {
+        robotDriver.processCommand(controllerHandler.getButtonCommand(event, press), event.deviceId, RobotDriver.CommandType.BUTTON)
     }
 
     fun onJoystickEvent(event: MotionEvent, historyPos: Int) {

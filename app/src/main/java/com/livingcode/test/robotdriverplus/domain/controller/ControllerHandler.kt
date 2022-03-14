@@ -60,12 +60,12 @@ class ControllerHandler {
         return Pair(left, right)
     }
 
-    fun getButtonCommand(event : KeyEvent) : ControllerButtons {
+    fun getButtonCommand(event : KeyEvent, press : Boolean) : ControllerButtons {
         return when (event.keyCode) {
-            KeyEvent.KEYCODE_BUTTON_L1 -> ControllerButtons.L1
-            KeyEvent.KEYCODE_BUTTON_R1 -> ControllerButtons.R1
-            KeyEvent.KEYCODE_BUTTON_L2 -> ControllerButtons.L2
-            KeyEvent.KEYCODE_BUTTON_R2 -> ControllerButtons.R2
+            KeyEvent.KEYCODE_BUTTON_L1 -> if(press) ControllerButtons.L1_DOWN else ControllerButtons.L1_UP
+            KeyEvent.KEYCODE_BUTTON_R1 -> if(press) ControllerButtons.R1_DOWN else ControllerButtons.R1_UP
+            KeyEvent.KEYCODE_BUTTON_L2 -> if(press) ControllerButtons.L2_DOWN else ControllerButtons.L2_UP
+            KeyEvent.KEYCODE_BUTTON_R2 -> if(press) ControllerButtons.R1_DOWN else ControllerButtons.R2_UP
             else -> ControllerButtons.NONE
         }
     }

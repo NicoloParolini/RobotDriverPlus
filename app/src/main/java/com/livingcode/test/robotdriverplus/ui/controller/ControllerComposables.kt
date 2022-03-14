@@ -41,22 +41,22 @@ fun Controller(
                     modifier = Modifier
                         .padding(defaultPadding)
                         .border(width = 2.dp, color = Color.Black)
-                        .background(color = if (selected == ControllerButtons.L2) Color.Green else Color.Transparent)
+                        .background(color = if (selected == ControllerButtons.L2_DOWN) Color.Green else Color.Transparent)
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.L2) }
+                        ).clickable { onSelect(ControllerButtons.L2_DOWN) }
                 )
                 Text(
                     text = "L1", style = motorSelectorLabel,
                     modifier = Modifier
                         .padding(defaultPadding)
                         .border(width = 1.dp, color = Color.Black)
-                        .background(color = if (selected == ControllerButtons.L1) Color.Green else Color.Transparent)
+                        .background(color = if (selected == ControllerButtons.L1_DOWN) Color.Green else Color.Transparent)
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.L1) }
+                        ).clickable { onSelect(ControllerButtons.L1_DOWN) }
                 )
                 FourDirectionsJoystick(
                     onSelected = { direction -> leftStick.onSelect(direction) },
@@ -73,22 +73,22 @@ fun Controller(
                     modifier = Modifier
                         .padding(defaultPadding)
                         .border(width = 2.dp, color = Color.Black)
-                        .background(color = if (selected == ControllerButtons.R2) Color.Green else Color.Transparent)
+                        .background(color = if (selected == ControllerButtons.R2_DOWN) Color.Green else Color.Transparent)
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.R2) }
+                        ).clickable { onSelect(ControllerButtons.R2_DOWN) }
                 )
                 Text(
                     text = "R1", style = motorSelectorLabel,
                     modifier = Modifier
                         .padding(defaultPadding)
                         .border(width = 1.dp, color = Color.Black)
-                        .background(color = if (selected == ControllerButtons.R1) Color.Green else Color.Transparent)
+                        .background(color = if (selected == ControllerButtons.R1_DOWN) Color.Green else Color.Transparent)
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.R1) }
+                        ).clickable { onSelect(ControllerButtons.R1_DOWN) }
                 )
                 FourDirectionsJoystick(
                     onSelected = { direction -> rightStick.onSelect(direction) },
@@ -107,7 +107,7 @@ fun ControllerPreview() {
         name = "Blue",
         leftStick = JoystickViewModel("LEFT STICK", {}),
         rightStick = JoystickViewModel("RIGHT STICK", {}),
-        selected = ControllerButtons.R2,
+        selected = ControllerButtons.R2_DOWN,
         onSelect = {}
     )
 }

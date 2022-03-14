@@ -2,8 +2,11 @@ package com.livingcode.test.robotdriverplus
 
 import android.app.Application
 import android.content.res.Resources
+import android.hardware.input.InputManager
 import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerHandler
+import com.livingcode.test.robotdriverplus.domain.controller.ControllerListener
+import com.livingcode.test.robotdriverplus.domain.controller.ControllerStorage
 import com.livingcode.test.robotdriverplus.domain.driver.RobotDriver
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowBackStack
 import org.koin.android.ext.koin.androidContext
@@ -18,6 +21,8 @@ class RobotApplication : Application() {
         single { FlowBackStack() }
         single { Configurator() }
         single { RobotDriver() }
+        single { ControllerListener(get(), androidContext().getSystemService(InputManager::class.java)) }
+        single { ControllerStorage() }
     }
 
     override fun onCreate() {

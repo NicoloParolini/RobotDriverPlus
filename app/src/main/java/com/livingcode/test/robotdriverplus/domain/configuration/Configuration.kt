@@ -13,10 +13,14 @@ enum class MotorCommand {
 }
 
 enum class ControllerButtons {
-    L1,
-    L2,
-    R1,
-    R2,
+    L1_DOWN,
+    L1_UP,
+    L2_DOWN,
+    L2_UP,
+    R1_DOWN,
+    R1_UP,
+    R2_DOWN,
+    R2_UP,
     LSTICK_UP,
     LSTICK_DOWN,
     LSTICK_LEFT,

@@ -16,7 +16,7 @@ class MainCoordinator(navigator: Navigator) : FlowCoordinator(), KoinComponent {
     }
 
     private val deviceListStep = FlowStep().useDefaultAction(
-        viewModelConstructor = { DevicesViewModel(get()) },
+        viewModelConstructor = { DevicesViewModel(get(), get()) },
         navigator = navigator,
         screen = Screens.SCREEN_DEVICE_LIST
     ).addNextStep(FlowResult.RESULT_CONTROLLER_SELECTED, controllerSetupStep)
