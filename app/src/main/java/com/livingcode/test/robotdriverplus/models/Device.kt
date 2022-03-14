@@ -5,6 +5,6 @@ sealed interface Device {
     var connected : Boolean
 }
 
-data class Controller(override val name : String, override var connected : Boolean) : Device
+data class Controller(override val name : String, override var connected : Boolean = false) : Device
 
-data class Robot (override val name : String, override var connected : Boolean) : Device
+data class Robot (override val name : String, override var connected : Boolean = false) : Device

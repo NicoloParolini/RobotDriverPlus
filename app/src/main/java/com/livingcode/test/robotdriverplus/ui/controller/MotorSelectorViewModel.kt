@@ -3,12 +3,12 @@ package com.livingcode.test.robotdriverplus.ui.controller
 import com.livingcode.test.robotdriverplus.R
 import com.livingcode.test.robotdriverplus.StateFlowContainer
 
-class MotorSelectorViewModel(val label : String, private val onSelect : (String, MotorDirection) -> Unit) {
+class MotorSelectorViewModel(val label : String, private val onSelected : (String, MotorDirection) -> Unit) {
     val position = StateFlowContainer(MotorDirection.MOTOR_UNUSED)
 
     fun onSelect(direction: MotorDirection){
         position.setValue(direction)
-        onSelect(label, direction)
+        onSelected(label, direction)
     }
 
     enum class MotorDirection(val iconRes : Int) {

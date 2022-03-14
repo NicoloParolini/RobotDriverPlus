@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.livingcode.test.robotdriverplus.R
 import com.livingcode.test.robotdriverplus.models.Controller
+import com.livingcode.test.robotdriverplus.models.Device
 import com.livingcode.test.robotdriverplus.models.Robot
 import com.livingcode.test.robotdriverplus.ui.shared.SingleLineListElement
 import com.livingcode.test.robotdriverplus.ui.theme.defaultPadding
@@ -25,7 +26,7 @@ import org.koin.androidx.compose.get
 fun Devices(
     devices: List<DeviceViewModel>,
     modifier: Modifier = Modifier,
-    onSelected: (String) -> Unit
+    onSelected: (DeviceViewModel) -> Unit
 ) {
     LazyColumn(modifier = modifier, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         items(devices) { vm ->
@@ -33,7 +34,7 @@ fun Devices(
                 SingleLineListElement(
                     name = vm.displayName,
                     connected = vm.device.connected,
-                    onClick = onSelected
+                    onClick = { onSelected(vm)}
                 )
                 when (vm) {
                     is ControllerViewModel -> {
@@ -71,7 +72,7 @@ fun Devices(
 fun DevicesRoot(vm: DevicesViewModel?) {
     vm?.let {
         val devices by it.devices.flow.collectAsState()
-        Devices(devices = devices, onSelected = { name -> it.onDeviceSelected(name) })
+        Devices(devices = devices, onSelected = { device -> it.onDeviceSelected(device) })
     }
 }
 

@@ -2,6 +2,9 @@ package com.livingcode.test.robotdriverplus
 
 import android.app.Application
 import android.content.res.Resources
+import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
+import com.livingcode.test.robotdriverplus.domain.controller.ControllerHandler
+import com.livingcode.test.robotdriverplus.domain.driver.RobotDriver
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowBackStack
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -13,6 +16,8 @@ class RobotApplication : Application() {
     private val koinModule = module {
         single { androidContext().resources }
         single { FlowBackStack() }
+        single { Configurator() }
+        single { RobotDriver() }
     }
 
     override fun onCreate() {
@@ -21,7 +26,7 @@ class RobotApplication : Application() {
             androidContext(this@RobotApplication)
             modules(koinModule)
         }
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
     }

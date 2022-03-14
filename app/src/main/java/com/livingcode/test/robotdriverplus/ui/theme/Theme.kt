@@ -15,7 +15,7 @@ val defaultRoundPercent = 20
 val colorConnected = Color.Green
 val colorDisconnected = Color.LightGray
 
-val motorSelectorIconSize = 48.dp
+val motorSelectorIconSize = 55.dp
 
 val listElementName = TextStyle(
     color = Color.Black,

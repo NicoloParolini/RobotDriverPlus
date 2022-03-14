@@ -14,8 +14,9 @@ class DevicesViewModel(private val resources : Resources) : FlowViewModel() {
         getDevices()
     }
 
-    fun onDeviceSelected(deviceName : String){
-        next(FlowResult.RESULT_CONTROLLER_SELECTED, deviceName)
+    fun onDeviceSelected(device : DeviceViewModel){
+        if(device is ControllerViewModel)
+            next(FlowResult.RESULT_CONTROLLER_SELECTED, device.device.name)
     }
 
     private fun getDevices() {
