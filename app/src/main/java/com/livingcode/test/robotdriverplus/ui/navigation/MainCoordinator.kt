@@ -2,6 +2,7 @@ package com.livingcode.test.robotdriverplus.ui.navigation
 
 import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetupViewModel
 import com.livingcode.test.robotdriverplus.ui.devices.DevicesViewModel
+import com.livingcode.test.robotdriverplus.ui.splash.SplashViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -16,10 +17,16 @@ class MainCoordinator(navigator: Navigator) : FlowCoordinator(), KoinComponent {
     }
 
     private val deviceListStep = FlowStep().useDefaultAction(
-        viewModelConstructor = { DevicesViewModel(get(), get()) },
+        viewModelConstructor = { DevicesViewModel(get(), get(), get()) },
         navigator = navigator,
         screen = Screens.SCREEN_DEVICE_LIST
     ).addNextStep(FlowResult.RESULT_CONTROLLER_SELECTED, controllerSetupStep)
 
-    override val startStep: FlowStep = deviceListStep
+    private val splashStep = FlowStep().useDefaultAction(
+        viewModelConstructor = { SplashViewModel() },
+        navigator = navigator,
+        screen = Screens.SCREEN_SPLASH
+    ).addNextStep(FlowResult.RESULT_OK, deviceListStep)
+
+    override val startStep: FlowStep = splashStep
 }

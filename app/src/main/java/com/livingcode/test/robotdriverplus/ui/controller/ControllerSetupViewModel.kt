@@ -6,7 +6,7 @@ import com.livingcode.test.robotdriverplus.StateFlowContainer
 import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
 import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
 import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
-import com.livingcode.test.robotdriverplus.models.Robot
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.devices.RobotViewModel
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowViewModel
 import kotlinx.coroutines.launch
@@ -53,10 +53,10 @@ class ControllerSetupViewModel(
     private fun getRobots() {
         availableRobots.setValue(
             listOf(
-                RobotViewModel(device = Robot(name = "NXT-1"), resources = resources, onClick = {
+                RobotViewModel(device = Robot(name = "NXT-1", macAddress = ""), resources = resources, onClick = {
                     addRobot(
                         ControlledRobotViewModel(
-                            label = it,
+                            label = it.name,
                             onSelect = { robot, motor, direction ->
                                 onSelectRobot(
                                     robot,
@@ -66,10 +66,10 @@ class ControllerSetupViewModel(
                             })
                     )
                 }),
-                RobotViewModel(device = Robot(name = "NXT-2"), resources = resources, onClick = {
+                RobotViewModel(device = Robot(name = "NXT-2", macAddress = ""), resources = resources, onClick = {
                     addRobot(
                         ControlledRobotViewModel(
-                            label = it,
+                            label = it.name,
                             onSelect = { robot, motor, direction ->
                                 onSelectRobot(
                                     robot,
@@ -79,10 +79,10 @@ class ControllerSetupViewModel(
                             })
                     )
                 }),
-                RobotViewModel(device = Robot(name = "NXT-3"), resources = resources, onClick = {
+                RobotViewModel(device = Robot(name = "NXT-3", macAddress = ""), resources = resources, onClick = {
                     addRobot(
                         ControlledRobotViewModel(
-                            label = it,
+                            label = it.name,
                             onSelect = { robot, motor, direction ->
                                 onSelectRobot(
                                     robot,
@@ -92,10 +92,10 @@ class ControllerSetupViewModel(
                             })
                     )
                 }),
-                RobotViewModel(device = Robot(name = "NXT-4"), resources = resources, onClick = {
+                RobotViewModel(device = Robot(name = "NXT-4", macAddress = ""), resources = resources, onClick = {
                     addRobot(
                         ControlledRobotViewModel(
-                            label = it,
+                            label = it.name,
                             onSelect = { robot, motor, direction ->
                                 onSelectRobot(
                                     robot,

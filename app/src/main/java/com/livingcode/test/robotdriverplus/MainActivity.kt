@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerListener
 import com.livingcode.test.robotdriverplus.ui.MainViewModel
 import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetup
@@ -29,10 +30,13 @@ import com.livingcode.test.robotdriverplus.ui.controller.ControllerSetupViewMode
 import com.livingcode.test.robotdriverplus.ui.devices.DevicesRoot
 import com.livingcode.test.robotdriverplus.ui.devices.DevicesViewModel
 import com.livingcode.test.robotdriverplus.ui.navigation.*
+import com.livingcode.test.robotdriverplus.ui.splash.SplashRoot
+import com.livingcode.test.robotdriverplus.ui.splash.SplashViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
+@ExperimentalPermissionsApi
 class MainActivity : ComponentActivity() {
     private val backStack: FlowBackStack by inject()
     private val controllerListener : ControllerListener by inject()
@@ -123,9 +127,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@ExperimentalPermissionsApi
 @Composable
 fun MainRoot(destination: MutableState<Screen>) {
     when (destination.value.screen) {
+        Screens.SCREEN_SPLASH -> SplashRoot(destination.value.viewModel as? SplashViewModel)
         Screens.SCREEN_DEVICE_LIST -> DevicesRoot(destination.value.viewModel as? DevicesViewModel)
         Screens.SCREEN_CONTROLLER_SETUP -> ControllerSetupRoot(vm = destination.value.viewModel as? ControllerSetupViewModel)
     }

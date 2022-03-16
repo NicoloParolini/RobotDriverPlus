@@ -1,5 +1,7 @@
 package com.livingcode.test.robotdriverplus.domain.controller
 
+import com.livingcode.test.robotdriverplus.ui.models.Controller
+
 class ControllerStorage {
     private val cache : MutableMap<String, Controller> = mutableMapOf()
 

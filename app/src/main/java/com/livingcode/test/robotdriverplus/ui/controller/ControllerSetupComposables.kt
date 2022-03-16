@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
-import com.livingcode.test.robotdriverplus.models.Robot
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.devices.RobotViewModel
 import com.livingcode.test.robotdriverplus.ui.theme.defaultPadding
 import com.livingcode.test.robotdriverplus.ui.theme.listElementName
@@ -60,12 +60,12 @@ fun ControllerSetupPreview() {
             RobotViewModel(
                 onClick = {},
                 resources = LocalContext.current.resources,
-                device = Robot(name = "NXT-1", connected = false)
+                device = Robot(name = "NXT-1", connected = false, macAddress = "")
             ),
             RobotViewModel(
                 onClick = {},
                 resources = LocalContext.current.resources,
-                device = Robot(name = "NXT-2", connected = false)
+                device = Robot(name = "NXT-2", connected = false, macAddress = "")
             )
         )
     )
@@ -95,7 +95,7 @@ fun ControllerRobotSelector(robots: List<RobotViewModel>) {
         items(robots) { robot ->
             Text(text = robot.displayName, modifier = Modifier
                 .clickable {
-                    robot.onClick(robot.device.name)
+                    robot.onClick(robot.device as Robot)
                 }
                 .padding(defaultPadding),
             style = listElementName)

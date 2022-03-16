@@ -2,6 +2,7 @@ package com.livingcode.test.robotdriverplus.domain.controller
 
 import android.hardware.input.InputManager
 import android.view.InputDevice
+import com.livingcode.test.robotdriverplus.ui.models.Controller
 
 class ControllerListener(
     private val storage: ControllerStorage,
@@ -40,7 +41,8 @@ class ControllerListener(
         return if (device.supportsSource(InputDevice.SOURCE_JOYSTICK)) Controller(
             name = device.name,
             id = id,
-            descriptor = device.descriptor
+            descriptor = device.descriptor,
+            connected = true
         ) else null
     }
 }

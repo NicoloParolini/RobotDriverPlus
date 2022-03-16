@@ -2,9 +2,9 @@ package com.livingcode.test.robotdriverplus.ui.devices
 
 import android.content.res.Resources
 import com.livingcode.test.robotdriverplus.R
-import com.livingcode.test.robotdriverplus.models.Controller
-import com.livingcode.test.robotdriverplus.models.Device
-import com.livingcode.test.robotdriverplus.models.Robot
+import com.livingcode.test.robotdriverplus.ui.models.Controller
+import com.livingcode.test.robotdriverplus.ui.models.Device
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 
 sealed interface DeviceViewModel {
     val device: Device
@@ -12,7 +12,7 @@ sealed interface DeviceViewModel {
     val displayName: String
 }
 
-class ControllerViewModel(
+data class ControllerViewModel(
     val robots: List<Robot>,
     override val device: Device,
     override val resources: Resources
@@ -20,10 +20,10 @@ class ControllerViewModel(
     override val displayName = resources.getString(R.string.controllerName, device.name)
 }
 
-class RobotViewModel(
+data class RobotViewModel(
     val controller : Controller? = null,
     override val device: Device,
-    val onClick: (String) -> Unit,
+    val onClick: (Robot) -> Unit,
     override val resources: Resources
 ) : DeviceViewModel {
     override val displayName = resources.getString(R.string.robotName, device.name)
