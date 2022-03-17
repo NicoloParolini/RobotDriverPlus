@@ -4,6 +4,7 @@ import android.content.res.Resources
 import com.livingcode.test.robotdriverplus.StateFlowContainer
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerStorage
 import com.livingcode.test.robotdriverplus.domain.robot.RobotConnector
+import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
 import com.livingcode.test.robotdriverplus.ui.models.Controller
 import com.livingcode.test.robotdriverplus.ui.models.DomainResult
 import com.livingcode.test.robotdriverplus.ui.models.Errors
@@ -15,7 +16,8 @@ import timber.log.Timber
 class DevicesViewModel(
     private val resources: Resources,
     private val controllerStorage: ControllerStorage,
-    private val robotConnector: RobotConnector
+    private val robotConnector: RobotConnector,
+    private val robotStorage: RobotStorage
 ) : FlowViewModel() {
     val devices: StateFlowContainer<List<DeviceViewModel>> = StateFlowContainer(listOf())
 
@@ -25,7 +27,7 @@ class DevicesViewModel(
 
     fun onDeviceSelected(device: DeviceViewModel) {
         if (device is ControllerViewModel)
-            next(FlowResult.RESULT_CONTROLLER_SELECTED, device.device.name)
+            next(FlowResult.RESULT_CONTROLLER_SELECTED, device.device)
         if (device is RobotViewModel)
             device.onClick(device.device as Robot)
     }
@@ -38,7 +40,7 @@ class DevicesViewModel(
                 resources = resources
             )
         }
-        val robots = robotConnector.scanForRobots().map {
+        val robots = robotStorage.getRobots().map {
             RobotViewModel(
                 device = it,
                 resources = resources,
@@ -67,11 +69,13 @@ class DevicesViewModel(
     }
 
     private fun processResult(result: DomainResult<Robot>) {
-        result.data?.let {
+        result.data?.let { robot ->
             val robots = devices.flow.value.map { dev ->
-                val robotVm = dev as RobotViewModel
-                if (dev.device.name == it.name) robotVm.copy(device = it)
-                else dev
+                (dev as? RobotViewModel)?.let { robotVm ->
+                    if (dev.device.name == robot.name) robotVm.copy(device = robot)
+                    else null
+                }
+                    ?: dev
             }
             devices.setValue(robots)
         }

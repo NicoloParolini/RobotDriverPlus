@@ -1,17 +1,15 @@
 package com.livingcode.test.robotdriverplus.domain.robot
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
-import android.content.pm.PackageManager
-import android.net.MacAddress
-import androidx.core.app.ActivityCompat
-import com.livingcode.test.robotdriverplus.StateFlowContainer
+import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
+import com.livingcode.test.robotdriverplus.domain.configuration.MotorId
 import com.livingcode.test.robotdriverplus.ui.models.DomainResult
 import com.livingcode.test.robotdriverplus.ui.models.Errors
 import com.livingcode.test.robotdriverplus.ui.models.Robot
+import timber.log.Timber
 import java.io.IOException
 import java.lang.Exception
 import java.util.*
@@ -49,9 +47,39 @@ class RobotConnector(btManager: BluetoothManager) {
                 it.outputStream.close()
                 it.close()
                 DomainResult(data = robot.copy(connected = false))
-            } ?: DomainResult(error = Errors.ERROR_NOT_CONNECTED, data = robot.copy(connected = false))
+            } ?: DomainResult(
+                error = Errors.ERROR_NOT_CONNECTED,
+                data = robot.copy(connected = false)
+            )
         } catch (ex: IOException) {
             DomainResult(error = Errors.ERROR_CLOSE_FAILED, data = robot.copy(connected = true))
+        }
+    }
+
+    fun commandRobot(robot: Robot, motor: Motors, command: MotorCommand) {
+        Timber.v("Command $robot $motor $command")
+        connectedRobots[robot.macAddress]?.let {socket ->
+            val cmd: Instructions? = when (command) {
+                MotorCommand.FWD -> Instructions(Instructions.forward(motor.byteId))
+                MotorCommand.BACK -> Instructions(Instructions.backward(motor.byteId))
+                MotorCommand.COAST -> Instructions(Instructions.brake(motor.byteId))
+                MotorCommand.BRAKE -> Instructions(Instructions.brake(motor.byteId))
+                MotorCommand.NONE -> null
+            }
+            cmd?.let {
+                writeBuffers(cmd.buffers, socket) }
+        }
+    }
+
+    private fun writeBuffers(buffers: Array<ByteArray?>, socket: BluetoothSocket) {
+        Timber.v("TEEEST Sending buffers")
+        try {
+            for (cursor in buffers.indices) {
+                buffers[cursor]?.let { socket.outputStream.write(it) }
+            }
+            socket.outputStream.flush()
+        } catch (e: IOException) {
+            Timber.e("Robot disconnected")
         }
     }
 }

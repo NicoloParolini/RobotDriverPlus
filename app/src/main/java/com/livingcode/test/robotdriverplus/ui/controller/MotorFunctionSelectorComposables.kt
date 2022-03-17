@@ -82,8 +82,8 @@ fun MotorSelector(
 @Preview
 fun MotorSelectorPreview() {
     MotorSelector(motors = listOf(
-        MotorSelectorViewModel("A") { _, _ -> },
-        MotorSelectorViewModel("B") { _, _ -> },
-        MotorSelectorViewModel("C") { _, _ -> }
+        MotorSelectorViewModel("A") {  },
+        MotorSelectorViewModel("B") {  },
+        MotorSelectorViewModel("C") {  }
     ))
 }

@@ -10,6 +10,7 @@ import com.livingcode.test.robotdriverplus.domain.controller.ControllerListener
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerStorage
 import com.livingcode.test.robotdriverplus.domain.driver.RobotDriver
 import com.livingcode.test.robotdriverplus.domain.robot.RobotConnector
+import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowBackStack
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -22,10 +23,12 @@ class RobotApplication : Application() {
         single { androidContext().resources }
         single { FlowBackStack() }
         single { Configurator() }
-        single { RobotDriver() }
-        single { ControllerListener(get(), androidContext().getSystemService(InputManager::class.java)) }
+        single { RobotDriver(get(), get(), get()) }
+        single { ControllerListener(get(), get()) }
         single { ControllerStorage() }
         single { RobotConnector(androidContext().getSystemService(BluetoothManager::class.java)) }
+        single { RobotStorage(get()) }
+        single { androidContext().getSystemService(InputManager::class.java) }
     }
 
     override fun onCreate() {

@@ -6,16 +6,20 @@ import com.livingcode.test.robotdriverplus.StateFlowContainer
 import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
 import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
 import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
+import com.livingcode.test.robotdriverplus.domain.robot.Motors
+import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
 import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.devices.RobotViewModel
+import com.livingcode.test.robotdriverplus.ui.models.Controller
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ControllerSetupViewModel(
-    val name: String,
+    val controller: Controller,
     val resources: Resources,
-    val configurator: Configurator
+    private val configurator: Configurator,
+    private val robotStorage: RobotStorage
 ) : FlowViewModel() {
     val robots: StateFlowContainer<List<ControlledRobotViewModel>> = StateFlowContainer(listOf())
     val rightStick = JoystickViewModel("RIGHT STICK") { onSelectControl(it.toButton(false)) }
@@ -32,86 +36,75 @@ class ControllerSetupViewModel(
     }
 
     private fun onSelectRobot(
-        robot: String,
-        motor: String,
+        robot: Robot,
+        motor: Motors,
         direction: MotorSelectorViewModel.MotorDirection
     ) {
-        if(selected.flow.value != ControllerButtons.NONE) {
-            Timber.v("Robot $robot motor $motor direction $direction assigned to controller $name ${selected.flow.value}")
+        val button = selected.flow.value
+        if (button != ControllerButtons.NONE) {
+            Timber.v("Robot $robot motor $motor direction $direction assigned to controller ${controller.descriptor} ${button}")
             viewModelScope.launch {
                 configurator.addCommand(
-                    controller = name,
-                    button = selected.flow.value,
+                    controller = controller,
+                    button = button,
                     robot = robot,
                     motor = motor,
                     dir = direction.toMotorCommand()
                 )
+                // Add stop commands to motors controlled by stick
+                when (button) {
+                    ControllerButtons.LSTICK_UP,
+                    ControllerButtons.LSTICK_DOWN,
+                    ControllerButtons.LSTICK_LEFT,
+                    ControllerButtons.LSTICK_RIGHT -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.LSTICK_OFF,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    ControllerButtons.RSTICK_UP,
+                    ControllerButtons.RSTICK_DOWN,
+                    ControllerButtons.RSTICK_LEFT,
+                    ControllerButtons.RSTICK_RIGHT -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.RSTICK_OFF,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    else -> { /*not needed*/ }
+                }
             }
         }
     }
 
+    private fun Robot.toRobotViewModel(): RobotViewModel {
+        return RobotViewModel(device = this, resources = resources, onClick = {
+            addRobot(
+                ControlledRobotViewModel(
+                    robot = it,
+                    onSelect = { robot, motor, direction ->
+                        onSelectRobot(
+                            robot,
+                            motor,
+                            direction
+                        )
+                    })
+            )
+        })
+    }
+
     private fun getRobots() {
         availableRobots.setValue(
-            listOf(
-                RobotViewModel(device = Robot(name = "NXT-1", macAddress = ""), resources = resources, onClick = {
-                    addRobot(
-                        ControlledRobotViewModel(
-                            label = it.name,
-                            onSelect = { robot, motor, direction ->
-                                onSelectRobot(
-                                    robot,
-                                    motor,
-                                    direction
-                                )
-                            })
-                    )
-                }),
-                RobotViewModel(device = Robot(name = "NXT-2", macAddress = ""), resources = resources, onClick = {
-                    addRobot(
-                        ControlledRobotViewModel(
-                            label = it.name,
-                            onSelect = { robot, motor, direction ->
-                                onSelectRobot(
-                                    robot,
-                                    motor,
-                                    direction
-                                )
-                            })
-                    )
-                }),
-                RobotViewModel(device = Robot(name = "NXT-3", macAddress = ""), resources = resources, onClick = {
-                    addRobot(
-                        ControlledRobotViewModel(
-                            label = it.name,
-                            onSelect = { robot, motor, direction ->
-                                onSelectRobot(
-                                    robot,
-                                    motor,
-                                    direction
-                                )
-                            })
-                    )
-                }),
-                RobotViewModel(device = Robot(name = "NXT-4", macAddress = ""), resources = resources, onClick = {
-                    addRobot(
-                        ControlledRobotViewModel(
-                            label = it.name,
-                            onSelect = { robot, motor, direction ->
-                                onSelectRobot(
-                                    robot,
-                                    motor,
-                                    direction
-                                )
-                            })
-                    )
-                })
-            )
+            robotStorage.getRobots().map { robot -> robot.toRobotViewModel() }
         )
     }
 
     private fun addRobot(robot: ControlledRobotViewModel) {
         val addedRobots = robots.flow.value.toMutableList()
-        addedRobots.find { it.label == robot.label }?.let { addedRobots.remove(it) }
+        addedRobots.find { it.robot.macAddress == robot.robot.macAddress }
+            ?.let { addedRobots.remove(it) }
             ?: addedRobots.add(robot)
         robots.setValue(addedRobots.toList())
     }

@@ -48,8 +48,8 @@ fun ControllerSetup(
 fun ControllerSetupPreview() {
     ControllerSetup(
         controlledRobots = listOf(
-            ControlledRobotViewModel("NXT-1") { _, _, _ -> },
-            ControlledRobotViewModel("NXT-2") { _, _, _ -> }
+            ControlledRobotViewModel(Robot(name = "NXT-1", connected = false, macAddress = "")) { _, _, _ -> },
+            ControlledRobotViewModel(Robot(name = "NXT-1", connected = false, macAddress = "")) { _, _, _ -> }
         ),
         controllerName = "Blue",
         rightStick = JoystickViewModel("RIGHT STICK", {}),
@@ -79,7 +79,7 @@ fun ControllerSetupRoot(vm: ControllerSetupViewModel?) {
         val availableRobots by it.availableRobots.flow.collectAsState()
         ControllerSetup(
             controlledRobots = robots,
-            controllerName = it.name,
+            controllerName = it.controller.name,
             rightStick = it.rightStick,
             leftStick = it.leftStick,
             selected = selected,

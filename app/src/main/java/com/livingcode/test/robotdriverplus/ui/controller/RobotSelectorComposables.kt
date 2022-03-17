@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.theme.motorSelectorLabel
 
 @Composable
@@ -36,9 +37,9 @@ fun RobotMotors(
 fun RobotMotorsPreview() {
     RobotMotors(
         label = "NXT-1", motors = listOf(
-            MotorSelectorViewModel("A") { _, _ -> },
-            MotorSelectorViewModel("B") { _, _ -> },
-            MotorSelectorViewModel("C") { _, _ -> }
+            MotorSelectorViewModel("A") {  },
+            MotorSelectorViewModel("B") {  },
+            MotorSelectorViewModel("C") {  }
         )
     )
 }
@@ -51,8 +52,8 @@ fun RobotSelector(
     LazyRow(modifier = modifier) {
         items(robots) { robot ->
             RobotMotors(
-                label = robot.label,
-                motors = robot.motors.values.toList()
+                label = robot.robot.name,
+                motors = robot.motors.map { it.second }
             )
         }
     }
@@ -62,7 +63,7 @@ fun RobotSelector(
 @Preview
 fun RobotSelectorPreview() {
     RobotSelector(robots = listOf(
-        ControlledRobotViewModel("NXT-1") { _, _, _ -> },
-        ControlledRobotViewModel("NXT-2") { _, _, _ -> }
+        ControlledRobotViewModel(Robot(name = "NXT-1", connected = false, macAddress = "")) { _, _, _ -> },
+        ControlledRobotViewModel(Robot(name = "NXT-1", connected = false, macAddress = "")) { _, _, _ -> }
     ))
 }
