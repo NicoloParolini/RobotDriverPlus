@@ -1,14 +1,28 @@
 package com.livingcode.test.robotdriverplus.domain.configuration
 
-import android.media.VolumeShaper
 import com.livingcode.test.robotdriverplus.domain.robot.Motors
-import com.livingcode.test.robotdriverplus.ui.controller.JoystickViewModel
-import com.livingcode.test.robotdriverplus.ui.controller.MotorSelectorViewModel
 import com.livingcode.test.robotdriverplus.ui.models.Controller
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 
-data class Configuration(val controller : Controller, val commands : MutableMap<ControllerButtons,MutableMap<MotorId, MotorCommand>>)
+data class Configuration(
+    val controller: String,
+    val commands: MutableMap<ControllerButtons, MutableMap<MotorId, MotorCommand>>
+)
 
-data class MotorId(val robot : String, val motor : Motors)
+data class MotorId(val robot: String, val motor: Motors)
+
+// for serializing purposes
+data class JsonConfiguration(
+    val controller: String,
+    val commands: List<JsonCommand>
+)
+
+data class JsonCommand(
+    val button: ControllerButtons,
+    val robot: String,
+    val motor: Motors,
+    val command: MotorCommand
+)
 
 enum class MotorCommand {
     FWD, BACK, COAST, BRAKE, NONE

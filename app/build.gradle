@@ -65,4 +65,6 @@ dependencies {
     implementation 'com.jakewharton.timber:timber:5.0.1'
 
     implementation "com.google.accompanist:accompanist-permissions:0.24.4-alpha"
+
+    implementation 'com.google.code.gson:gson:2.9.0'
 }

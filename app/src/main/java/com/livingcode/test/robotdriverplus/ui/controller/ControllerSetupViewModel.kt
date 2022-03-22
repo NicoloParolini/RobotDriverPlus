@@ -3,9 +3,7 @@ package com.livingcode.test.robotdriverplus.ui.controller
 import android.content.res.Resources
 import androidx.lifecycle.viewModelScope
 import com.livingcode.test.robotdriverplus.StateFlowContainer
-import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
-import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
-import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
+import com.livingcode.test.robotdriverplus.domain.configuration.*
 import com.livingcode.test.robotdriverplus.domain.robot.Motors
 import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
 import com.livingcode.test.robotdriverplus.ui.models.Robot
@@ -27,12 +25,33 @@ class ControllerSetupViewModel(
     val selected = StateFlowContainer(ControllerButtons.NONE)
     val availableRobots: StateFlowContainer<List<RobotViewModel>> = StateFlowContainer(listOf())
 
+    private val configuration: Configuration?
+        get() = configurator.getConfiguration(controller = controller.descriptor)
+
     init {
         getRobots()
     }
 
     fun onSelectControl(button: ControllerButtons) {
         selected.setValue(button)
+        configuration?.commands?.get(button)?.let { cmd ->
+            robots.flow.value.forEach { robotVm ->
+                robotVm.motors.forEach { it.second.position.setValue(MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) }
+            }
+            robots.flow.value.forEach { robotVm ->
+                cmd.keys.forEach { motorId ->
+                    if (motorId.robot == robotVm.robot.macAddress) {
+                        robotVm.motors.forEach { inst ->
+                            if (inst.first.id == motorId.motor.id) {
+                                cmd[motorId]?.toMotorDirection()?.let { dir ->
+                                    inst.second.position.setValue(dir)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun onSelectRobot(
@@ -51,7 +70,7 @@ class ControllerSetupViewModel(
                     motor = motor,
                     dir = direction.toMotorCommand()
                 )
-                // Add stop commands to motors controlled by stick
+                // Add stop commands to motors controlled by stick or L/R button
                 when (button) {
                     ControllerButtons.LSTICK_UP,
                     ControllerButtons.LSTICK_DOWN,
@@ -73,7 +92,36 @@ class ControllerSetupViewModel(
                         motor = motor,
                         dir = MotorCommand.BRAKE
                     )
-                    else -> { /*not needed*/ }
+                    ControllerButtons.L1_DOWN -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.L1_UP,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    ControllerButtons.L2_DOWN -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.L2_UP,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    ControllerButtons.R1_DOWN -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.R1_UP,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    ControllerButtons.R2_DOWN -> configurator.addCommand(
+                        controller = controller,
+                        button = ControllerButtons.R2_UP,
+                        robot = robot,
+                        motor = motor,
+                        dir = MotorCommand.BRAKE
+                    )
+                    else -> { /*not needed*/
+                    }
                 }
             }
         }
@@ -126,6 +174,16 @@ class ControllerSetupViewModel(
             MotorSelectorViewModel.MotorDirection.MOTOR_BRAKE -> MotorCommand.BRAKE
             MotorSelectorViewModel.MotorDirection.MOTOR_BCK -> MotorCommand.BACK
             MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED -> MotorCommand.NONE
+        }
+    }
+
+    private fun MotorCommand.toMotorDirection(): MotorSelectorViewModel.MotorDirection {
+        return when (this) {
+            MotorCommand.FWD -> MotorSelectorViewModel.MotorDirection.MOTOR_FWD
+            MotorCommand.COAST -> MotorSelectorViewModel.MotorDirection.MOTOR_COAST
+            MotorCommand.BRAKE -> MotorSelectorViewModel.MotorDirection.MOTOR_BRAKE
+            MotorCommand.BACK -> MotorSelectorViewModel.MotorDirection.MOTOR_BCK
+            MotorCommand.NONE -> MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED
         }
     }
 }

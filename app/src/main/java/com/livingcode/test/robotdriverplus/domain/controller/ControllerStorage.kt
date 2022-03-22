@@ -16,4 +16,8 @@ class ControllerStorage {
     fun getControllers() : List<Controller>{
         return cache.values.toList()
     }
+
+    fun getController(id : String) : Controller? {
+        return cache[id]
+    }
 }

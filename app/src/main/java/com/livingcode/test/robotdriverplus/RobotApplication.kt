@@ -4,6 +4,7 @@ import android.app.Application
 import android.bluetooth.BluetoothManager
 import android.content.res.Resources
 import android.hardware.input.InputManager
+import com.livingcode.test.robotdriverplus.domain.configuration.ConfigurationStorage
 import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerHandler
 import com.livingcode.test.robotdriverplus.domain.controller.ControllerListener
@@ -22,13 +23,15 @@ class RobotApplication : Application() {
     private val koinModule = module {
         single { androidContext().resources }
         single { FlowBackStack() }
-        single { Configurator() }
+        single { Configurator(get()) }
         single { RobotDriver(get(), get(), get()) }
         single { ControllerListener(get(), get()) }
         single { ControllerStorage() }
         single { RobotConnector(androidContext().getSystemService(BluetoothManager::class.java)) }
         single { RobotStorage(get()) }
         single { androidContext().getSystemService(InputManager::class.java) }
+        single { androidContext().getSharedPreferences(androidContext().packageName, MODE_PRIVATE) }
+        single { ConfigurationStorage(get()) }
     }
 
     override fun onCreate() {
