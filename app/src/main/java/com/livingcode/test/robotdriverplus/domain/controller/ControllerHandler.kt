@@ -46,26 +46,25 @@ class ControllerHandler {
             leftJUpDown < 0 -> ControllerButtons.LSTICK_UP
             leftJLR < 0 -> ControllerButtons.LSTICK_LEFT
             leftJLR > 0 -> ControllerButtons.LSTICK_RIGHT
-            leftJUpDown == 0f && leftJLR == 0f -> ControllerButtons.LSTICK_OFF
-            else -> ControllerButtons.NONE }
+            else -> ControllerButtons.LSTICK_OFF
+        }
 
         val right = when {
             rightJUpDown > 0 -> ControllerButtons.RSTICK_DOWN
             rightJUpDown < 0 -> ControllerButtons.RSTICK_UP
             rightJLR < 0 -> ControllerButtons.RSTICK_LEFT
             rightJLR > 0 -> ControllerButtons.RSTICK_RIGHT
-            rightJUpDown == 0f && rightJLR == 0f -> ControllerButtons.RSTICK_OFF
-            else -> ControllerButtons.NONE
+            else -> ControllerButtons.RSTICK_OFF
         }
         return Pair(left, right)
     }
 
     fun getButtonCommand(event : KeyEvent, press : Boolean) : ControllerButtons {
         return when (event.keyCode) {
-            KeyEvent.KEYCODE_BUTTON_L1 -> if(press) ControllerButtons.L1_DOWN else ControllerButtons.L1_UP
-            KeyEvent.KEYCODE_BUTTON_R1 -> if(press) ControllerButtons.R1_DOWN else ControllerButtons.R1_UP
-            KeyEvent.KEYCODE_BUTTON_L2 -> if(press) ControllerButtons.L2_DOWN else ControllerButtons.L2_UP
-            KeyEvent.KEYCODE_BUTTON_R2 -> if(press) ControllerButtons.R1_DOWN else ControllerButtons.R2_UP
+            KeyEvent.KEYCODE_BUTTON_L1 -> if (press) ControllerButtons.L1_DOWN else ControllerButtons.L1_UP
+            KeyEvent.KEYCODE_BUTTON_R1 -> if (press) ControllerButtons.R1_DOWN else ControllerButtons.R1_UP
+            KeyEvent.KEYCODE_BUTTON_L2 -> if (press) ControllerButtons.L2_DOWN else ControllerButtons.L2_UP
+            KeyEvent.KEYCODE_BUTTON_R2 -> if (press) ControllerButtons.R2_DOWN else ControllerButtons.R2_UP
             else -> ControllerButtons.NONE
         }
     }

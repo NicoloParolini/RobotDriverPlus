@@ -26,7 +26,7 @@ class ControllerListener(
 
     override fun onInputDeviceChanged(p0: Int) {
         getController(p0)?.let{
-            storage.connect(it)
+            storage.change(it)
         }
     }
 

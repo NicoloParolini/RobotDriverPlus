@@ -2,10 +2,9 @@ package com.livingcode.test.robotdriverplus.domain.driver
 
 import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
 import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
-import com.livingcode.test.robotdriverplus.domain.robot.Motors
+import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
 import com.livingcode.test.robotdriverplus.domain.robot.RobotConnector
 import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
-import com.livingcode.test.robotdriverplus.ui.models.Robot
 import timber.log.Timber
 
 class RobotDriver(
@@ -28,7 +27,11 @@ class RobotDriver(
             val commands = configurator.getCommands(cmd, id)
             commands.forEach { comm ->
                 robotStorage.getRobot(comm.robot)?.let {
-                    robotConnector.commandRobot(robot = it, motor = comm.motor, command = comm.cmd)
+                    if (comm.cmd != MotorCommand.NONE) robotConnector.commandRobot(
+                        robot = it,
+                        motor = comm.motor,
+                        command = comm.cmd
+                    )
                 }
             }
         }

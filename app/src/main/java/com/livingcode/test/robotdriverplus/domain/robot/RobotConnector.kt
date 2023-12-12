@@ -5,13 +5,11 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothSocket
 import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
-import com.livingcode.test.robotdriverplus.domain.configuration.MotorId
 import com.livingcode.test.robotdriverplus.ui.models.DomainResult
 import com.livingcode.test.robotdriverplus.ui.models.Errors
 import com.livingcode.test.robotdriverplus.ui.models.Robot
 import timber.log.Timber
 import java.io.IOException
-import java.lang.Exception
 import java.util.*
 
 class RobotConnector(btManager: BluetoothManager) {
@@ -20,8 +18,10 @@ class RobotConnector(btManager: BluetoothManager) {
 
     @SuppressLint("MissingPermission")
     fun scanForRobots(): List<Robot> {
-        return btAdapter.bondedDevices.map { dev ->
-            Robot(name = dev.name, macAddress = dev.address, connected = false)
+        return btAdapter.bondedDevices.mapNotNull { dev ->
+            if (!dev.name.contains("Controller")) {
+                Robot(name = dev.name, macAddress = dev.address, connected = false)
+            } else null
         }.sortedBy { it.name }
     }
 

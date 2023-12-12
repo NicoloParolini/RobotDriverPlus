@@ -1,8 +1,5 @@
 package com.livingcode.test.robotdriverplus.domain.configuration
 
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.livingcode.test.robotdriverplus.domain.controller.ControllerStorage
 import com.livingcode.test.robotdriverplus.domain.robot.Motors
 import com.livingcode.test.robotdriverplus.ui.models.Controller
 import com.livingcode.test.robotdriverplus.ui.models.Robot
@@ -25,6 +22,7 @@ class Configurator(
         motor: Motors,
         dir: MotorCommand
     ) {
+        Timber.v("Configurator: $controller $button $robot $motor $dir")
         val motorId = MotorId(robot.macAddress, motor)
         val command = mutableMapOf(motorId to dir)
         configCache[controller.descriptor]?.let { config ->

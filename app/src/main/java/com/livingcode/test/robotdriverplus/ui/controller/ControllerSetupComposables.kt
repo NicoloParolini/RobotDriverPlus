@@ -1,7 +1,9 @@
 package com.livingcode.test.robotdriverplus.ui.controller
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -12,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
-import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.devices.RobotViewModel
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.theme.defaultPadding
 import com.livingcode.test.robotdriverplus.ui.theme.listElementName
 
@@ -25,7 +27,8 @@ fun ControllerSetup(
     rightStick: JoystickViewModel,
     leftStick: JoystickViewModel,
     selected: ControllerButtons,
-    onSelect: (ControllerButtons) -> Unit
+    onSelect: (ControllerButtons) -> Unit,
+    onNameChange: (String) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Controller(
@@ -34,7 +37,8 @@ fun ControllerSetup(
             rightStick = rightStick,
             selected = selected,
             modifier = Modifier.weight(1f),
-            onSelect = onSelect
+            onSelect = onSelect,
+            onNameChange = onNameChange
         )
         RobotSelector(
             robots = controlledRobots
@@ -67,7 +71,8 @@ fun ControllerSetupPreview() {
                 resources = LocalContext.current.resources,
                 device = Robot(name = "NXT-2", connected = false, macAddress = "")
             )
-        )
+        ),
+        onNameChange = {}
     )
 }
 
@@ -77,14 +82,16 @@ fun ControllerSetupRoot(vm: ControllerSetupViewModel?) {
         val robots by it.robots.flow.collectAsState()
         val selected by it.selected.flow.collectAsState()
         val availableRobots by it.availableRobots.flow.collectAsState()
+        val controller by it.localController.flow.collectAsState()
         ControllerSetup(
             controlledRobots = robots,
-            controllerName = it.controller.name,
+            controllerName = controller.name,
             rightStick = it.rightStick,
             leftStick = it.leftStick,
             selected = selected,
             onSelect = { button -> it.onSelectControl(button) },
-            availableRobots = availableRobots
+            availableRobots = availableRobots,
+            onNameChange = { new -> it.changeControllerName(new) }
         )
     }
 }

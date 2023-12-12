@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,11 +30,19 @@ fun Controller(
     leftStick: JoystickViewModel,
     rightStick: JoystickViewModel,
     selected: ControllerButtons,
-    modifier : Modifier = Modifier,
-    onSelect : (ControllerButtons) -> Unit
+    modifier: Modifier = Modifier,
+    onSelect: (ControllerButtons) -> Unit,
+    onNameChange: (String) -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = name, style = motorSelectorLabel)
+        var text by remember { mutableStateOf(name) }
+        TextField(
+            value = text,
+            onValueChange = {
+                onNameChange(it)
+                text = it
+            }
+        )
         Row {
             Column(
                 modifier = Modifier.weight(1f),
@@ -45,7 +58,8 @@ fun Controller(
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.L2_DOWN) }
+                        )
+                        .clickable { onSelect(ControllerButtons.L2_DOWN) }
                 )
                 Text(
                     text = "L1", style = motorSelectorLabel,
@@ -56,7 +70,8 @@ fun Controller(
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.L1_DOWN) }
+                        )
+                        .clickable { onSelect(ControllerButtons.L1_DOWN) }
                 )
                 FourDirectionsJoystick(
                     onSelected = { direction -> leftStick.onSelect(direction) },
@@ -77,7 +92,8 @@ fun Controller(
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.R2_DOWN) }
+                        )
+                        .clickable { onSelect(ControllerButtons.R2_DOWN) }
                 )
                 Text(
                     text = "R1", style = motorSelectorLabel,
@@ -88,7 +104,8 @@ fun Controller(
                         .padding(
                             vertical = defaultPadding,
                             horizontal = defaultPaddingTriple
-                        ).clickable { onSelect(ControllerButtons.R1_DOWN) }
+                        )
+                        .clickable { onSelect(ControllerButtons.R1_DOWN) }
                 )
                 FourDirectionsJoystick(
                     onSelected = { direction -> rightStick.onSelect(direction) },
@@ -108,6 +125,7 @@ fun ControllerPreview() {
         leftStick = JoystickViewModel("LEFT STICK", {}),
         rightStick = JoystickViewModel("RIGHT STICK", {}),
         selected = ControllerButtons.R2_DOWN,
-        onSelect = {}
+        onSelect = {},
+        onNameChange = {}
     )
 }

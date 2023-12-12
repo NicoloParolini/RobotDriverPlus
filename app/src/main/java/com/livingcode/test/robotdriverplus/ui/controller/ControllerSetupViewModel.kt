@@ -3,30 +3,36 @@ package com.livingcode.test.robotdriverplus.ui.controller
 import android.content.res.Resources
 import androidx.lifecycle.viewModelScope
 import com.livingcode.test.robotdriverplus.StateFlowContainer
-import com.livingcode.test.robotdriverplus.domain.configuration.*
+import com.livingcode.test.robotdriverplus.domain.configuration.Configuration
+import com.livingcode.test.robotdriverplus.domain.configuration.Configurator
+import com.livingcode.test.robotdriverplus.domain.configuration.ControllerButtons
+import com.livingcode.test.robotdriverplus.domain.configuration.MotorCommand
+import com.livingcode.test.robotdriverplus.domain.controller.ControllerStorage
 import com.livingcode.test.robotdriverplus.domain.robot.Motors
 import com.livingcode.test.robotdriverplus.domain.robot.RobotStorage
-import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.devices.RobotViewModel
 import com.livingcode.test.robotdriverplus.ui.models.Controller
+import com.livingcode.test.robotdriverplus.ui.models.Robot
 import com.livingcode.test.robotdriverplus.ui.navigation.FlowViewModel
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ControllerSetupViewModel(
-    val controller: Controller,
+    controller: Controller,
     val resources: Resources,
     private val configurator: Configurator,
-    private val robotStorage: RobotStorage
+    private val robotStorage: RobotStorage,
+    private val controllerStorage: ControllerStorage
 ) : FlowViewModel() {
     val robots: StateFlowContainer<List<ControlledRobotViewModel>> = StateFlowContainer(listOf())
     val rightStick = JoystickViewModel("RIGHT STICK") { onSelectControl(it.toButton(false)) }
     val leftStick = JoystickViewModel("LEFT STICK") { onSelectControl(it.toButton(true)) }
     val selected = StateFlowContainer(ControllerButtons.NONE)
     val availableRobots: StateFlowContainer<List<RobotViewModel>> = StateFlowContainer(listOf())
+    val localController: StateFlowContainer<Controller> = StateFlowContainer(controller)
 
     private val configuration: Configuration?
-        get() = configurator.getConfiguration(controller = controller.descriptor)
+        get() = configurator.getConfiguration(controller = localController.flow.value.descriptor)
 
     init {
         getRobots()
@@ -54,6 +60,11 @@ class ControllerSetupViewModel(
         }
     }
 
+    fun changeControllerName(new: String) {
+        localController.setValue(localController.flow.value.copy(name = new))
+        controllerStorage.change(localController.flow.value)
+    }
+
     private fun onSelectRobot(
         robot: Robot,
         motor: Motors,
@@ -61,10 +72,10 @@ class ControllerSetupViewModel(
     ) {
         val button = selected.flow.value
         if (button != ControllerButtons.NONE) {
-            Timber.v("Robot $robot motor $motor direction $direction assigned to controller ${controller.descriptor} ${button}")
+            Timber.v("Robot $robot motor $motor direction $direction assigned to controller ${localController.flow.value.descriptor} ${button}")
             viewModelScope.launch {
                 configurator.addCommand(
-                    controller = controller,
+                    controller = localController.flow.value,
                     button = button,
                     robot = robot,
                     motor = motor,
@@ -76,49 +87,49 @@ class ControllerSetupViewModel(
                     ControllerButtons.LSTICK_DOWN,
                     ControllerButtons.LSTICK_LEFT,
                     ControllerButtons.LSTICK_RIGHT -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.LSTICK_OFF,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     ControllerButtons.RSTICK_UP,
                     ControllerButtons.RSTICK_DOWN,
                     ControllerButtons.RSTICK_LEFT,
                     ControllerButtons.RSTICK_RIGHT -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.RSTICK_OFF,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     ControllerButtons.L1_DOWN -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.L1_UP,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     ControllerButtons.L2_DOWN -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.L2_UP,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     ControllerButtons.R1_DOWN -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.R1_UP,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     ControllerButtons.R2_DOWN -> configurator.addCommand(
-                        controller = controller,
+                        controller = localController.flow.value,
                         button = ControllerButtons.R2_UP,
                         robot = robot,
                         motor = motor,
-                        dir = MotorCommand.BRAKE
+                        dir = if (direction == MotorSelectorViewModel.MotorDirection.MOTOR_UNUSED) MotorCommand.NONE else MotorCommand.BRAKE
                     )
                     else -> { /*not needed*/
                     }

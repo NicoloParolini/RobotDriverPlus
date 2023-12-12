@@ -11,7 +11,7 @@ class MainCoordinator(navigator: Navigator) : FlowCoordinator(), KoinComponent {
 
     private val controllerSetupStep = FlowStep().setAction { result ->
         (result.payload as? Controller)?.let { name ->
-            val vm = ControllerSetupViewModel(name, get(), get(), get())
+            val vm = ControllerSetupViewModel(name, get(), get(), get(), get())
             navigator.navigate(Screen(Screens.SCREEN_CONTROLLER_SETUP, vm))
             return@setAction vm.proceed()
         } ?: FlowResult.RESULT_MISSING_PAYLOAD
